@@ -1,95 +1,53 @@
+"use client"
+import axios from "axios";
 import Image from 'next/image'
 import styles from './page.module.css'
+import {youtube_parser} from './utils'
+import { useRef, useState } from 'react';
 
 export default function Home() {
+  const inputUrlRef = useRef();
+  const [urlResult, setUrlResult] = useState(null);
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const youtubeID = youtube_parser(inputUrlRef.current.value);
+
+    const options = {
+      method: 'get',
+      url: 'https://youtube-mp36.p.rapidapi.com/dl',
+      headers: {
+        'X-RapidAPI-Key': 'f694a8085fmshd9ccaaf94be9610p1ad24cjsnb95f633ff2c3',
+        'X-RapidAPI-Host': 'youtube-mp36.p.rapidapi.com'
+      },
+      params: {
+        id: youtubeID
+      }
+    }
+    axios(options)
+      .then(res => setUrlResult(res.data.link))
+      .catch(err => console.log(err))
+
+    inputUrlRef.current.value = '';
+
+  }
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <div className="app">
+    <span className="logo">youtube to mp3</span>
+    <section className="content">
+      <h1 className="content_title">YouTube to MP3 Converter</h1>
+      <p className="content_description">
+        Transform YouTube videos into MP3s in just a few clicks!
+      </p>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      <form onSubmit={handleSubmit} className="form">
+        <input ref={inputUrlRef} placeholder="Paste a Youtube video URL link..." className="form_input" type="text" />
+        <button type="submit" className="form_button">Search</button>
+      </form>
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+      {urlResult ? <a target='_blank' rel="noreferrer" href={urlResult} className="download_btn">Download MP3</a> : ''}
+      
+    </section>
+  </div>
   )
 }
