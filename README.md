@@ -28,8 +28,11 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 Link
+# or
 rapidApi - https://rapidapi.com/ytjar/api/youtube-mp36/
+# or
 google font - https://fonts.google.com/
+# or
 css gradient - https://cssgradient.io/gradient-backgrounds/
 
 
